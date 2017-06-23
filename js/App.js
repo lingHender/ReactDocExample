@@ -3,49 +3,61 @@ import {
 	Platform,
 	StyleSheet,
 	TouchableOpacity,
+	ScrollView,
 	View,
 	Text,
 } from 'react-native';
 import {
 	StackNavigator
 } from 'react-navigation';
+import Banner from './components/Banner';
 import SimpleStack from './components/SimpleStack';
 import SimpleTabs from './components/SimpleTabs';
+import SimpleDrawer from './components/SimpleDrawer';
 
 const ExampleRoutes = {
 	SimpleStack: {
 		name: 'Stack Example',
 		description: 'A card stack',
 		screen: SimpleStack,
+		params: 'test'
 	},
 	SimpleTabs: {
 		name: 'Tabs Example',
-		description: 'A card stack',
+		description: 'A card tabs',
 		screen: SimpleTabs,
 	},
+	SimpleDrawer: {
+		name: 'Drawer Example',
+		description: 'A card drawer',
+		screen: SimpleDrawer,
+	}
 };
 
 const MainScreen = ({
 	navigation
 }) => (
-	<View>
+	<ScrollView>
+		<Banner />
+	   {Object.keys(ExampleRoutes).map((routeName: string) => (
 		<TouchableOpacity 
-		  key='SimpleStack'
+		  key={routeName}
 		  onPress={()=>{
-		  	const {path, params, screen} = ExampleRoutes['SimpleStack'];
-		  	const { router } = screen;
+		  	const {path, params, screen} = ExampleRoutes[routeName]; //params从哪来
+		  	const { router } = screen; //screen 属性值有哪些
 		  	const action = path && router.getActionForPathAndParams(path, params);
-		  	navigation.navigate('SimpleStack', {}, action);
+		  	navigation.navigate(routeName, {}, action);
 		  }}
 		>
 		 <View style={styles.item}>
-          <Text style={styles.title}>{ExampleRoutes['SimpleStack'].name}</Text>
+          <Text style={styles.title}>{ExampleRoutes[routeName].name}</Text>
           <Text style={styles.description}>
-            {ExampleRoutes['SimpleStack'].description}
+            {ExampleRoutes[routeName].description}
           </Text>
         </View>
 		</TouchableOpacity>
-	</View>
+		))}
+	</ScrollView>
 )
 
 const AppContainer = StackNavigator({
